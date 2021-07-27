@@ -1,0 +1,56 @@
+property yourPassword : "please enter here your password"
+
+tell application "Keychain Access"
+	activate
+end tell
+
+-- return every UI element of front window
+set resultStr to ""
+tell application "System Events"
+	tell process "Keychain Access"
+		-- set win to outline 1 of scroll area 1 of splitter group 1 of window 1
+		-- set the selectedTable to (the first table whose class of selection range is range)
+		set theTable to outline 1 of scroll area 1 of splitter group 1 of window 1
+		repeat with aRow in row of theTable
+			select aRow
+			keystroke return
+			delay 2
+			set tabGroup to tab group 1 of front window
+			click checkbox 1 of tabGroup
+			
+			tell application "System Events"
+				tell process "SecurityAgent"
+					set frontmost to true
+					if (count of windows) > 0 then
+						set window_name to name of front window
+					end if
+					try
+						keystroke yourPassword
+						delay 0.1
+						keystroke return
+						delay 0.1
+					on error
+						-- do nothing to skip the error
+					end try
+				end tell
+				delay 0.5
+			end tell
+			try
+				set dialogAccount to value of attribute "AXValue" of text field 3 of tabGroup
+				set dialogDomain to value of attribute "AXValue" of text field 5 of tabGroup
+				set dialogPassword to value of attribute "AXValue" of text field 1 of tabGroup
+				set resultStr to resultStr & "
+account: " & dialogAccount & " domain: " & dialogDomain & " password: " & dialogPassword
+			on error
+				-- do nothing to skip the error
+			end try
+			click button 1 of front window
+		end repeat
+	end tell
+end tell
+resultStr
+
+
+
+
+
