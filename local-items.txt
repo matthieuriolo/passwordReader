@@ -1,4 +1,4 @@
-property yourPassword : "please enter here your password"
+property aPassword : "please enter here your password"
 
 tell application "Keychain Access"
 	activate
@@ -25,7 +25,7 @@ tell application "System Events"
 						set window_name to name of front window
 					end if
 					try
-						keystroke yourPassword
+						keystroke aPassword
 						delay 0.1
 						keystroke return
 						delay 0.1
